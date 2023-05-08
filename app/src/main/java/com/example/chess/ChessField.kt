@@ -1,0 +1,59 @@
+package com.example.chess
+
+typealias OnFieldChangedListener = (chessField: ChessField) -> Unit
+
+class ChessField {
+
+    companion object{
+        const val SIZE_OF_BOARD: Int = 8
+    }
+
+    private val cells = Array(SIZE_OF_BOARD) {
+        Array(SIZE_OF_BOARD) {
+            Cell(
+                CellSelectedParam.UNSELECTED,
+                CellPieceParam.NOTHING,
+                CellTeamParam.NONE
+            )
+        }
+    }
+
+    val listeners = mutableSetOf<OnFieldChangedListener>()
+
+    fun getCellSelectedParam(row: Int, column: Int): CellSelectedParam {
+        return cells[row][column].cellSelectedParam
+    }
+
+    fun setCellSelectedParam(row: Int, column: Int, cellSelectedParam: CellSelectedParam) {
+        cells[row][column].cellSelectedParam = cellSelectedParam
+        if (cells[row][column].cellSelectedParam != cellSelectedParam) {
+            cells[row][column].cellSelectedParam = cellSelectedParam
+            listeners.forEach { it.invoke(this) }
+        }
+    }
+
+    fun getCellPieceParam(row: Int, column: Int): CellPieceParam {
+        return cells[row][column].cellPieceParam
+    }
+
+    fun setCellPieceParam(row: Int, column: Int, cellPieceParam: CellPieceParam) {
+        cells[row][column].cellPieceParam = cellPieceParam
+        if (cells[row][column].cellPieceParam != cellPieceParam) {
+            cells[row][column].cellPieceParam = cellPieceParam
+            listeners.forEach { it.invoke(this) }
+        }
+    }
+
+    fun getCellTeamParam(row: Int, column: Int): CellTeamParam {
+        return cells[row][column].cellTeamParam
+    }
+
+    fun setCellTeamParam(row: Int, column: Int, cellTeamParam: CellTeamParam) {
+        cells[row][column].cellTeamParam = cellTeamParam
+        if (cells[row][column].cellTeamParam != cellTeamParam) {
+            cells[row][column].cellTeamParam = cellTeamParam
+            listeners.forEach { it.invoke(this) }
+        }
+    }
+
+}

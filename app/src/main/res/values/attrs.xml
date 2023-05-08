@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="ChessFieldView">
+        <attr name="blackCellColor" format="color"/>
+        <attr name="whiteCellColor" format="color"/>
+    </declare-styleable>
+
+    <attr name="chessFieldStyle" format="reference"/>
+
+</resources>
