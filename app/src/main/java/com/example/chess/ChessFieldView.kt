@@ -50,13 +50,13 @@ class ChessFieldView(
         R.style.DefaultChessBoardStyle
     )
 
+    constructor(context: Context) : this(context, null)
+
     constructor(context: Context, attrs: AttributeSet?) : this(
         context,
         attrs,
         R.attr.chessFieldStyle
     )
-
-    constructor(context: Context) : this(context, null)
 
     init {
         if (attrs != null) {
