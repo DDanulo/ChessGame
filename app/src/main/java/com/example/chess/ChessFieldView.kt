@@ -1,16 +1,15 @@
 package com.example.chess
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.Rect
 import android.graphics.RectF
-import android.media.AsyncPlayer
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
-import java.lang.reflect.Field
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.properties.Delegates
@@ -27,11 +26,11 @@ class ChessFieldView(
             invalidate()
 
         }
-
-    private lateinit var player1Paint: Paint
-    private lateinit var player2Paint: Paint
     private lateinit var blackCellsPaint: Paint
     private lateinit var whiteCellsPaint: Paint
+    private val piecesBitmaps: PiecesBitmaps = PiecesBitmaps()
+    private val bitmap: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.pieces)
+
 
     private var blackCellColor by Delegates.notNull<Int>()
     private var whiteCellColor by Delegates.notNull<Int>()
@@ -39,9 +38,12 @@ class ChessFieldView(
 
     }
 
-    private val fieldRect = RectF(0f, 0f, 0f, 0f)
+    private val fieldRect: RectF = RectF(0f, 0f, 0f, 0f)
     private var cellSize: Float = 0f
     private var cellPadding: Float = 0f
+
+    private lateinit var boardSquares: BoardSquares
+
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
         context,
@@ -51,7 +53,6 @@ class ChessFieldView(
     )
 
     constructor(context: Context) : this(context, null)
-
     constructor(context: Context, attrs: AttributeSet?) : this(
         context,
         attrs,
@@ -68,7 +69,7 @@ class ChessFieldView(
         initPaints()
     }
 
-    fun initPaints() {
+    private fun initPaints() {
         blackCellsPaint = Paint(Paint.ANTI_ALIAS_FLAG)
         blackCellsPaint.color = BLACK_CELL_COLOR
         blackCellsPaint.style = Paint.Style.FILL
@@ -128,6 +129,8 @@ class ChessFieldView(
         fieldRect.top = paddingTop + (safeHeight - fieldHeight) / 2
         fieldRect.right = fieldRect.left + fieldWidth
         fieldRect.bottom = fieldRect.top + fieldHeight
+
+        boardSquares = BoardSquares(fieldRect.left, fieldRect.top, cellSize)
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -135,47 +138,126 @@ class ChessFieldView(
         if (fieldRect.width() <= 0) return
         if (fieldRect.height() <= 0) return
         drawField(canvas)
+        drawPieces(canvas)
     }
 
     private fun drawField(canvas: Canvas) {
-//        val field = this.chessField ?: return
-        val xStart = fieldRect.left
-        val yStart = fieldRect.top
-        for (i in 0..8 step 2) {
-            for (j in 0..6 step 2){
-                canvas.drawRect(
-                    xStart + cellSize * i,
-                    yStart + cellSize * j,
-                    xStart + cellSize * (i + 1),
-                    yStart + cellSize * (j + 1),
-                    whiteCellsPaint
-                )
-                canvas.drawRect(
-                    xStart + cellSize * (i+1),
-                    yStart + cellSize * j,
-                    xStart + cellSize * (i + 2),
-                    yStart + cellSize * (j + 1),
-                    blackCellsPaint
-                )
+        for (i in 0..7) {
+            for (j in 0..7) {
+                if ((i + j) % 2 == 1) {
+                    canvas.drawRect(boardSquares.squares[i][j], blackCellsPaint)
+                } else {
+                    canvas.drawRect(boardSquares.squares[i][j], whiteCellsPaint)
+                }
             }
         }
-        for (i in 1..8 step 2) {
-            for (j in 1..7 step 2){
-                canvas.drawRect(
-                    xStart + cellSize * i,
-                    yStart + cellSize * j,
-                    xStart + cellSize * (i + 1),
-                    yStart + cellSize * (j + 1),
-                    whiteCellsPaint
-                )
-                canvas.drawRect(
-                    xStart + cellSize * (i-1),
-                    yStart + cellSize * j,
-                    xStart + cellSize * (i),
-                    yStart + cellSize * (j + 1),
-                    blackCellsPaint
-                )
-            }
+    }
+
+
+    private fun drawPieces(canvas: Canvas) {
+        canvas.drawBitmap(
+            bitmap,
+            piecesBitmaps.blackKing,
+            boardSquares.squares[4][0], blackCellsPaint
+        )
+        canvas.drawBitmap(
+            bitmap,
+            piecesBitmaps.blackQueen,
+            boardSquares.squares[3][0], blackCellsPaint
+        )
+        canvas.drawBitmap(
+            bitmap,
+            piecesBitmaps.blackTour,
+            boardSquares.squares[0][0], blackCellsPaint
+        )
+        canvas.drawBitmap(
+            bitmap,
+            piecesBitmaps.blackTour,
+            boardSquares.squares[7][0], blackCellsPaint
+        )
+        canvas.drawBitmap(
+            bitmap,
+            piecesBitmaps.blackBishop,
+            boardSquares.squares[2][0],
+            blackCellsPaint
+        )
+        canvas.drawBitmap(
+            bitmap,
+            piecesBitmaps.blackBishop,
+            boardSquares.squares[5][0],
+            blackCellsPaint
+        )
+        canvas.drawBitmap(
+            bitmap,
+            piecesBitmaps.blackKnight,
+            boardSquares.squares[1][0],
+            blackCellsPaint
+        )
+        canvas.drawBitmap(
+            bitmap,
+            piecesBitmaps.blackKnight,
+            boardSquares.squares[6][0],
+            blackCellsPaint
+        )
+        for (i in 0..7) {
+            canvas.drawBitmap(
+                bitmap,
+                piecesBitmaps.blackPawn,
+                boardSquares.squares[i][1],
+                blackCellsPaint
+            )
+        }
+        canvas.drawBitmap(
+            bitmap,
+            piecesBitmaps.whiteKing,
+            boardSquares.squares[4][7], blackCellsPaint
+        )
+        canvas.drawBitmap(
+            bitmap,
+            piecesBitmaps.whiteQueen,
+            boardSquares.squares[3][7], blackCellsPaint
+        )
+        canvas.drawBitmap(
+            bitmap,
+            piecesBitmaps.whiteTour,
+            boardSquares.squares[0][7], blackCellsPaint
+        )
+        canvas.drawBitmap(
+            bitmap,
+            piecesBitmaps.whiteTour,
+            boardSquares.squares[7][7], blackCellsPaint
+        )
+        canvas.drawBitmap(
+            bitmap,
+            piecesBitmaps.whiteBishop,
+            boardSquares.squares[2][7],
+            blackCellsPaint
+        )
+        canvas.drawBitmap(
+            bitmap,
+            piecesBitmaps.whiteBishop,
+            boardSquares.squares[5][7],
+            blackCellsPaint
+        )
+        canvas.drawBitmap(
+            bitmap,
+            piecesBitmaps.whiteKnight,
+            boardSquares.squares[1][7],
+            blackCellsPaint
+        )
+        canvas.drawBitmap(
+            bitmap,
+            piecesBitmaps.whiteKnight,
+            boardSquares.squares[6][7],
+            blackCellsPaint
+        )
+        for (i in 0..7) {
+            canvas.drawBitmap(
+                bitmap,
+                piecesBitmaps.whitePawn,
+                boardSquares.squares[i][6],
+                blackCellsPaint
+            )
         }
     }
 
