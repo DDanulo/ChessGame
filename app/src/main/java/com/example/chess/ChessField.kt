@@ -10,11 +10,7 @@ class ChessField {
 
     private val cells = Array(SIZE_OF_BOARD) {
         Array(SIZE_OF_BOARD) {
-            Cell(
-                CellSelectedParam.UNSELECTED,
-                CellPieceParam.NOTHING,
-                CellTeamParam.NONE
-            )
+            Cell()
         }
     }
 
@@ -52,6 +48,18 @@ class ChessField {
         cells[row][column].cellTeamParam = cellTeamParam
         if (cells[row][column].cellTeamParam != cellTeamParam) {
             cells[row][column].cellTeamParam = cellTeamParam
+            listeners.forEach { it.invoke(this) }
+        }
+    }
+
+    fun getCell(row: Int, column: Int) : Cell{
+        return cells[row][column]
+    }
+
+    fun setCell(row: Int, column: Int, cell: Cell){
+        cells[row][column] = cell
+        if (cells[row][column] != cell) {
+            cells[row][column] = cell
             listeners.forEach { it.invoke(this) }
         }
     }

@@ -9,16 +9,20 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.util.TypedValue
+import android.view.MotionEvent
 import android.view.View
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.properties.Delegates
 
+
+typealias OnCellClickedActionListener = (row: Int, column: Int, field: ChessField) -> Unit
+
 class ChessFieldView(
     context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int
 ) : View(context, attrs, defStyleAttr, defStyleRes) {
 
-    var chessField: ChessField? = null
+    var chessField: ChessField = ChessField()
         set(value) {
             field?.listeners?.remove(listener)
             field = value
@@ -26,6 +30,8 @@ class ChessFieldView(
             invalidate()
 
         }
+
+    var actionListener: OnCellClickedActionListener? = null
     private lateinit var blackCellsPaint: Paint
     private lateinit var whiteCellsPaint: Paint
     private val piecesBitmaps: PiecesBitmaps = PiecesBitmaps()
@@ -131,6 +137,36 @@ class ChessFieldView(
         fieldRect.bottom = fieldRect.top + fieldHeight
 
         boardSquares = BoardSquares(fieldRect.left, fieldRect.top, cellSize)
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+//        val field = this.chessField?: return false
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> {
+                return true
+            }
+
+            MotionEvent.ACTION_UP -> {
+                val row = getRow(event)
+                val column = getColumn(event)
+                if (row >= 0 && column >= 0 && row < 8 && column < 8){
+                    actionListener?.invoke(row, column, chessField)
+                    return true
+                }
+                return false
+            }
+        }
+
+        return false
+    }
+
+    private fun getRow(event: MotionEvent): Int {
+        return ((event.y - fieldRect.top) / cellSize).toInt()
+    }
+
+    private fun getColumn(event: MotionEvent): Int {
+        return ((event.x - fieldRect.left) / cellSize).toInt()
+
     }
 
     override fun onDraw(canvas: Canvas) {

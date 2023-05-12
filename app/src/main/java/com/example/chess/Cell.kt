@@ -1,7 +1,7 @@
 package com.example.chess
 
 data class Cell(
-    var cellSelectedParam: CellSelectedParam,
-    var cellPieceParam: CellPieceParam,
-    var cellTeamParam: CellTeamParam
+    var cellSelectedParam: CellSelectedParam = CellSelectedParam.UNSELECTED,
+    var cellPieceParam: CellPieceParam = CellPieceParam.NOTHING,
+    var cellTeamParam: CellTeamParam = CellTeamParam.NONE
 )
