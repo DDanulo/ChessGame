@@ -57,6 +57,7 @@ class GameFragment : Fragment() {
                     firstClickRow = -1
                 } else {
                     field.setCell(row, column, firstClickCell!!)
+                    field.setCellSelectedParam(row, column, CellSelectedParam.UNSELECTED)
                     field.setCell(firstClickRow, firstClickColumn, Cell())
                     firstClickCell = null
                     firstClickColumn = -1

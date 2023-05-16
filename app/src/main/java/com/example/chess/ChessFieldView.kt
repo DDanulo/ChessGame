@@ -32,6 +32,8 @@ class ChessFieldView(
         }
 
     var actionListener: OnCellClickedActionListener? = null
+    private lateinit var blackCellsSelectedPaint: Paint
+    private lateinit var whiteCellsSelectedPaint: Paint
     private lateinit var blackCellsPaint: Paint
     private lateinit var whiteCellsPaint: Paint
     private val piecesBitmaps: PiecesBitmaps = PiecesBitmaps()
@@ -83,6 +85,14 @@ class ChessFieldView(
         whiteCellsPaint = Paint(Paint.ANTI_ALIAS_FLAG)
         whiteCellsPaint.color = WHITE_CELL_COLOR
         whiteCellsPaint.style = Paint.Style.FILL
+
+        blackCellsSelectedPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+        blackCellsSelectedPaint.color = BLACK_CELL_SELECTED_COLOR
+        blackCellsSelectedPaint.style = Paint.Style.FILL
+
+        whiteCellsSelectedPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+        whiteCellsSelectedPaint.color = WHITE_CELL_SELECTED_COLOR
+        whiteCellsSelectedPaint.style = Paint.Style.FILL
 
     }
 
@@ -174,7 +184,24 @@ class ChessFieldView(
         if (fieldRect.width() <= 0) return
         if (fieldRect.height() <= 0) return
         drawField(canvas)
+        drawSelection(canvas)
         drawPieces(canvas)
+
+    }
+
+    private fun drawSelection(canvas: Canvas) {
+        for (row in 0..7) {
+            for (column in 0..7) {
+                val cell = chessField.getCell(row, column)
+                if (cell.cellSelectedParam == CellSelectedParam.SELECTED) {
+                    if (row % 2 != column % 2){
+                        canvas.drawRect(boardSquares.squares[row][column], blackCellsSelectedPaint)
+                    }else{
+                        canvas.drawRect(boardSquares.squares[row][column], whiteCellsSelectedPaint)
+                    }
+                }
+            }
+        }
     }
 
     private fun drawField(canvas: Canvas) {
@@ -194,7 +221,7 @@ class ChessFieldView(
         for (row in 0 until 8) {
             for (column in 0 until 8) {
                 val cell = chessField.getCell(row, column)
-                if (cell.cellTeamParam == CellTeamParam.BLACK){
+                if (cell.cellTeamParam == CellTeamParam.BLACK) {
                     when (cell.cellPieceParam) {
                         CellPieceParam.NOTHING -> TODO()
                         CellPieceParam.PAWN -> canvas.drawBitmap(
@@ -203,35 +230,40 @@ class ChessFieldView(
                             boardSquares.squares[row][column],
                             blackCellsPaint
                         )
+
                         CellPieceParam.BISHOP -> canvas.drawBitmap(
                             bitmap,
                             piecesBitmaps.blackBishop,
                             boardSquares.squares[row][column],
                             blackCellsPaint
                         )
+
                         CellPieceParam.KNIGHT -> canvas.drawBitmap(
                             bitmap,
                             piecesBitmaps.blackKnight,
                             boardSquares.squares[row][column],
                             blackCellsPaint
                         )
+
                         CellPieceParam.ROOK -> canvas.drawBitmap(
                             bitmap,
                             piecesBitmaps.blackTour,
                             boardSquares.squares[row][column], blackCellsPaint
                         )
+
                         CellPieceParam.QUEEN -> canvas.drawBitmap(
                             bitmap,
                             piecesBitmaps.blackQueen,
                             boardSquares.squares[row][column], blackCellsPaint
                         )
+
                         CellPieceParam.KING -> canvas.drawBitmap(
                             bitmap,
                             piecesBitmaps.blackKing,
                             boardSquares.squares[row][column], blackCellsPaint
                         )
                     }
-                }else if (cell.cellTeamParam == CellTeamParam.WHITE){
+                } else if (cell.cellTeamParam == CellTeamParam.WHITE) {
                     when (cell.cellPieceParam) {
                         CellPieceParam.NOTHING -> TODO()
                         CellPieceParam.PAWN -> canvas.drawBitmap(
@@ -240,28 +272,33 @@ class ChessFieldView(
                             boardSquares.squares[row][column],
                             blackCellsPaint
                         )
+
                         CellPieceParam.BISHOP -> canvas.drawBitmap(
                             bitmap,
                             piecesBitmaps.whiteBishop,
                             boardSquares.squares[row][column],
                             blackCellsPaint
                         )
+
                         CellPieceParam.KNIGHT -> canvas.drawBitmap(
                             bitmap,
                             piecesBitmaps.whiteKnight,
                             boardSquares.squares[row][column],
                             blackCellsPaint
                         )
+
                         CellPieceParam.ROOK -> canvas.drawBitmap(
                             bitmap,
                             piecesBitmaps.whiteTour,
                             boardSquares.squares[row][column], blackCellsPaint
                         )
+
                         CellPieceParam.QUEEN -> canvas.drawBitmap(
                             bitmap,
                             piecesBitmaps.whiteQueen,
                             boardSquares.squares[row][column], blackCellsPaint
                         )
+
                         CellPieceParam.KING -> canvas.drawBitmap(
                             bitmap,
                             piecesBitmaps.whiteKing,
@@ -300,6 +337,12 @@ class ChessFieldView(
 
         @JvmField
         val WHITE_CELL_COLOR = Color.parseColor("#eae9d2")
+
+        @JvmField
+        val BLACK_CELL_SELECTED_COLOR = Color.parseColor("#258ccc")
+
+        @JvmField
+        val WHITE_CELL_SELECTED_COLOR = Color.parseColor("#75c7e9")
         const val DESIRED_CELL_SIZE = 50
     }
 }

@@ -7,4 +7,7 @@
     <string name="sample_time">00:00</string>
     <string name="sample_name">ім\'я</string>
     <string name="made_by_me">програма створена учнем Ліцею імені Романа Шухевича</string>
+    <string name="info">Розробник</string>
+    <string name="ukrainian">українська</string>
+    <string name="english">англійська</string>
 </resources>
