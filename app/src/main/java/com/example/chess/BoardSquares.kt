@@ -13,7 +13,7 @@ data class BoardSquares(val xStart: Float, val yStart: Float, val cellSize: Floa
                 val cellStartY: Float = yStart + cellSize * j
                 val cellEndX: Float = xStart + cellSize * (i + 1)
                 val cellEndY: Float = yStart + cellSize * (j + 1)
-                squares[i][j] = Rect(
+                squares[j][i] = Rect(
                     cellStartX.toInt(), cellStartY.toInt(),
                     cellEndX.toInt(), cellEndY.toInt()
                 )

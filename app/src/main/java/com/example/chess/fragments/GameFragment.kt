@@ -33,25 +33,35 @@ class GameFragment : Fragment() {
         binding.ChessBoard.chessField = ChessField()
 
         binding.ChessBoard.actionListener = { row, column, field ->
+
             if (firstClickCell == null) {
-                field.setCellSelectedParam(
-                    row,
-                    column,
-                    CellSelectedParam.SELECTED
-                )
-                firstClickRow = row
-                firstClickColumn = column
-                firstClickCell = field.getCell(row, column)
-            } else if (!legalMoveCheck) { //TODO create legal move checker
-                field.setCellSelectedParam(
-                    firstClickRow,
-                    firstClickColumn,
-                    CellSelectedParam.UNSELECTED
-                )
-                firstClickCell = null
+                if (field.getCellPieceParam(row, column) != CellPieceParam.NOTHING) {
+                    field.setCellSelectedParam(
+                        row,
+                        column,
+                        CellSelectedParam.SELECTED
+                    )
+                    firstClickRow = row
+                    firstClickColumn = column
+                    firstClickCell = field.getCell(row, column)
+                }
             } else {
-                field.setCell(row, column, firstClickCell!!)
-                field.setCell(firstClickRow, firstClickColumn, Cell())
+                if (!legalMoveCheck) { //TODO create legal move checker
+                    field.setCellSelectedParam(
+                        firstClickRow,
+                        firstClickColumn,
+                        CellSelectedParam.UNSELECTED
+                    )
+                    firstClickCell = null
+                    firstClickColumn = -1
+                    firstClickRow = -1
+                } else {
+                    field.setCell(row, column, firstClickCell!!)
+                    field.setCell(firstClickRow, firstClickColumn, Cell())
+                    firstClickCell = null
+                    firstClickColumn = -1
+                    firstClickRow = -1
+                }
             }
         }
 

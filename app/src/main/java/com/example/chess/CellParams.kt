@@ -10,7 +10,7 @@ enum class CellPieceParam {
     PAWN,
     BISHOP,
     KNIGHT,
-    TOUR,
+    ROOK,
     QUEEN,
     KING
 }

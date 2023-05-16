@@ -8,11 +8,7 @@ class ChessField {
         const val SIZE_OF_BOARD: Int = 8
     }
 
-    private val cells = Array(SIZE_OF_BOARD) {
-        Array(SIZE_OF_BOARD) {
-            Cell()
-        }
-    }
+    private val cells = CellsFactory().createStartingPosition()
 
     val listeners = mutableSetOf<OnFieldChangedListener>()
 
@@ -21,7 +17,7 @@ class ChessField {
     }
 
     fun setCellSelectedParam(row: Int, column: Int, cellSelectedParam: CellSelectedParam) {
-        cells[row][column].cellSelectedParam = cellSelectedParam
+//        cells[row][column].cellSelectedParam = cellSelectedParam
         if (cells[row][column].cellSelectedParam != cellSelectedParam) {
             cells[row][column].cellSelectedParam = cellSelectedParam
             listeners.forEach { it.invoke(this) }
@@ -33,7 +29,7 @@ class ChessField {
     }
 
     fun setCellPieceParam(row: Int, column: Int, cellPieceParam: CellPieceParam) {
-        cells[row][column].cellPieceParam = cellPieceParam
+//        cells[row][column].cellPieceParam = cellPieceParam
         if (cells[row][column].cellPieceParam != cellPieceParam) {
             cells[row][column].cellPieceParam = cellPieceParam
             listeners.forEach { it.invoke(this) }
@@ -45,7 +41,7 @@ class ChessField {
     }
 
     fun setCellTeamParam(row: Int, column: Int, cellTeamParam: CellTeamParam) {
-        cells[row][column].cellTeamParam = cellTeamParam
+//        cells[row][column].cellTeamParam = cellTeamParam
         if (cells[row][column].cellTeamParam != cellTeamParam) {
             cells[row][column].cellTeamParam = cellTeamParam
             listeners.forEach { it.invoke(this) }
@@ -57,11 +53,11 @@ class ChessField {
     }
 
     fun setCell(row: Int, column: Int, cell: Cell){
-        cells[row][column] = cell
-        if (cells[row][column] != cell) {
+//        cells[row][column] = cell
+//        if (cells[row][column] != cell) {
             cells[row][column] = cell
             listeners.forEach { it.invoke(this) }
-        }
+//        }
     }
 
 }

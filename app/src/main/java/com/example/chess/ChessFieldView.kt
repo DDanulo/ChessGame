@@ -24,9 +24,9 @@ class ChessFieldView(
 
     var chessField: ChessField = ChessField()
         set(value) {
-            field?.listeners?.remove(listener)
+            field.listeners.remove(listener)
             field = value
-            value?.listeners?.add(listener)
+            value.listeners.add(listener)
             invalidate()
 
         }
@@ -41,7 +41,7 @@ class ChessFieldView(
     private var blackCellColor by Delegates.notNull<Int>()
     private var whiteCellColor by Delegates.notNull<Int>()
     private val listener: OnFieldChangedListener = {
-
+        invalidate()
     }
 
     private val fieldRect: RectF = RectF(0f, 0f, 0f, 0f)
@@ -88,12 +88,12 @@ class ChessFieldView(
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        chessField?.listeners?.add(listener)
+        chessField.listeners.add(listener)
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
-        chessField?.listeners?.remove(listener)
+        chessField.listeners.remove(listener)
     }
 
     private fun initAttributes(attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
@@ -149,7 +149,7 @@ class ChessFieldView(
             MotionEvent.ACTION_UP -> {
                 val row = getRow(event)
                 val column = getColumn(event)
-                if (row >= 0 && column >= 0 && row < 8 && column < 8){
+                if (row >= 0 && column >= 0 && row < 8 && column < 8) {
                     actionListener?.invoke(row, column, chessField)
                     return true
                 }
@@ -191,109 +191,86 @@ class ChessFieldView(
 
 
     private fun drawPieces(canvas: Canvas) {
-        canvas.drawBitmap(
-            bitmap,
-            piecesBitmaps.blackKing,
-            boardSquares.squares[4][0], blackCellsPaint
-        )
-        canvas.drawBitmap(
-            bitmap,
-            piecesBitmaps.blackQueen,
-            boardSquares.squares[3][0], blackCellsPaint
-        )
-        canvas.drawBitmap(
-            bitmap,
-            piecesBitmaps.blackTour,
-            boardSquares.squares[0][0], blackCellsPaint
-        )
-        canvas.drawBitmap(
-            bitmap,
-            piecesBitmaps.blackTour,
-            boardSquares.squares[7][0], blackCellsPaint
-        )
-        canvas.drawBitmap(
-            bitmap,
-            piecesBitmaps.blackBishop,
-            boardSquares.squares[2][0],
-            blackCellsPaint
-        )
-        canvas.drawBitmap(
-            bitmap,
-            piecesBitmaps.blackBishop,
-            boardSquares.squares[5][0],
-            blackCellsPaint
-        )
-        canvas.drawBitmap(
-            bitmap,
-            piecesBitmaps.blackKnight,
-            boardSquares.squares[1][0],
-            blackCellsPaint
-        )
-        canvas.drawBitmap(
-            bitmap,
-            piecesBitmaps.blackKnight,
-            boardSquares.squares[6][0],
-            blackCellsPaint
-        )
-        for (i in 0..7) {
-            canvas.drawBitmap(
-                bitmap,
-                piecesBitmaps.blackPawn,
-                boardSquares.squares[i][1],
-                blackCellsPaint
-            )
-        }
-        canvas.drawBitmap(
-            bitmap,
-            piecesBitmaps.whiteKing,
-            boardSquares.squares[4][7], blackCellsPaint
-        )
-        canvas.drawBitmap(
-            bitmap,
-            piecesBitmaps.whiteQueen,
-            boardSquares.squares[3][7], blackCellsPaint
-        )
-        canvas.drawBitmap(
-            bitmap,
-            piecesBitmaps.whiteTour,
-            boardSquares.squares[0][7], blackCellsPaint
-        )
-        canvas.drawBitmap(
-            bitmap,
-            piecesBitmaps.whiteTour,
-            boardSquares.squares[7][7], blackCellsPaint
-        )
-        canvas.drawBitmap(
-            bitmap,
-            piecesBitmaps.whiteBishop,
-            boardSquares.squares[2][7],
-            blackCellsPaint
-        )
-        canvas.drawBitmap(
-            bitmap,
-            piecesBitmaps.whiteBishop,
-            boardSquares.squares[5][7],
-            blackCellsPaint
-        )
-        canvas.drawBitmap(
-            bitmap,
-            piecesBitmaps.whiteKnight,
-            boardSquares.squares[1][7],
-            blackCellsPaint
-        )
-        canvas.drawBitmap(
-            bitmap,
-            piecesBitmaps.whiteKnight,
-            boardSquares.squares[6][7],
-            blackCellsPaint
-        )
-        for (i in 0..7) {
-            canvas.drawBitmap(
-                bitmap,
-                piecesBitmaps.whitePawn,
-                boardSquares.squares[i][6],
-                blackCellsPaint
-            )
+        for (row in 0 until 8) {
+            for (column in 0 until 8) {
+                val cell = chessField.getCell(row, column)
+                if (cell.cellTeamParam == CellTeamParam.BLACK){
+                    when (cell.cellPieceParam) {
+                        CellPieceParam.NOTHING -> TODO()
+                        CellPieceParam.PAWN -> canvas.drawBitmap(
+                            bitmap,
+                            piecesBitmaps.blackPawn,
+                            boardSquares.squares[row][column],
+                            blackCellsPaint
+                        )
+                        CellPieceParam.BISHOP -> canvas.drawBitmap(
+                            bitmap,
+                            piecesBitmaps.blackBishop,
+                            boardSquares.squares[row][column],
+                            blackCellsPaint
+                        )
+                        CellPieceParam.KNIGHT -> canvas.drawBitmap(
+                            bitmap,
+                            piecesBitmaps.blackKnight,
+                            boardSquares.squares[row][column],
+                            blackCellsPaint
+                        )
+                        CellPieceParam.ROOK -> canvas.drawBitmap(
+                            bitmap,
+                            piecesBitmaps.blackTour,
+                            boardSquares.squares[row][column], blackCellsPaint
+                        )
+                        CellPieceParam.QUEEN -> canvas.drawBitmap(
+                            bitmap,
+                            piecesBitmaps.blackQueen,
+                            boardSquares.squares[row][column], blackCellsPaint
+                        )
+                        CellPieceParam.KING -> canvas.drawBitmap(
+                            bitmap,
+                            piecesBitmaps.blackKing,
+                            boardSquares.squares[row][column], blackCellsPaint
+                        )
+                    }
+                }else if (cell.cellTeamParam == CellTeamParam.WHITE){
+                    when (cell.cellPieceParam) {
+                        CellPieceParam.NOTHING -> TODO()
+                        CellPieceParam.PAWN -> canvas.drawBitmap(
+                            bitmap,
+                            piecesBitmaps.whitePawn,
+                            boardSquares.squares[row][column],
+                            blackCellsPaint
+                        )
+                        CellPieceParam.BISHOP -> canvas.drawBitmap(
+                            bitmap,
+                            piecesBitmaps.whiteBishop,
+                            boardSquares.squares[row][column],
+                            blackCellsPaint
+                        )
+                        CellPieceParam.KNIGHT -> canvas.drawBitmap(
+                            bitmap,
+                            piecesBitmaps.whiteKnight,
+                            boardSquares.squares[row][column],
+                            blackCellsPaint
+                        )
+                        CellPieceParam.ROOK -> canvas.drawBitmap(
+                            bitmap,
+                            piecesBitmaps.whiteTour,
+                            boardSquares.squares[row][column], blackCellsPaint
+                        )
+                        CellPieceParam.QUEEN -> canvas.drawBitmap(
+                            bitmap,
+                            piecesBitmaps.whiteQueen,
+                            boardSquares.squares[row][column], blackCellsPaint
+                        )
+                        CellPieceParam.KING -> canvas.drawBitmap(
+                            bitmap,
+                            piecesBitmaps.whiteKing,
+                            boardSquares.squares[row][column], blackCellsPaint
+                        )
+                    }
+                }
+
+            }
         }
     }
 
