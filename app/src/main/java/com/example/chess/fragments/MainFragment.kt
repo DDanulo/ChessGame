@@ -10,6 +10,8 @@ import com.example.chess.databinding.FragmentMainBinding
 
 class MainFragment : Fragment() {
 
+
+
     private lateinit var binding: FragmentMainBinding
 
     override fun onCreateView(
@@ -25,9 +27,12 @@ class MainFragment : Fragment() {
         return binding.root
     }
 
+
+
     private fun launchGameScreen() {
         parentFragmentManager.beginTransaction()
             .replace(R.id.main_container_for_fragments, GameFragment())
+            .addToBackStack("backstack1")
             .commit()
     }
 
