@@ -13,7 +13,6 @@
         android:text="@string/made_by_me"
         android:gravity="center"
         android:textSize="20sp"
-        android:textColor="@color/black"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

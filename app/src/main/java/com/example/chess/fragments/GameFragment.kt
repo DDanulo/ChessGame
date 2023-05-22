@@ -10,6 +10,7 @@ import com.example.chess.CellPieceParam
 import com.example.chess.CellSelectedParam
 import com.example.chess.CellTeamParam
 import com.example.chess.ChessField
+import com.example.chess.LegalMoveChecker
 import com.example.chess.databinding.FragmentGameBinding
 import kotlin.properties.Delegates
 
@@ -21,8 +22,9 @@ class GameFragment : Fragment() {
     private var firstClickRow by Delegates.notNull<Int>()
     private var firstClickColumn by Delegates.notNull<Int>()
 
-    //    private var legalMoveCheck by Delegates.notNull<Boolean>()
-    private var legalMoveCheck = true
+    private var legalMoveCheck by Delegates.notNull<Boolean>()
+
+    //    private var legalMoveCheck = true
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -46,6 +48,15 @@ class GameFragment : Fragment() {
                     firstClickCell = field.getCell(row, column)
                 }
             } else {
+                legalMoveCheck = LegalMoveChecker(
+                    field,
+                    firstClickCell!!,
+                    field.getCell(row, column),
+                    firstClickRow,
+                    firstClickColumn,
+                    row,
+                    column
+                ).isMoveLegal
                 if (!legalMoveCheck) { //TODO create legal move checker
                     field.setCellSelectedParam(
                         firstClickRow,
