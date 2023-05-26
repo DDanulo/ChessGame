@@ -20,11 +20,10 @@ class LegalMoveChecker(
             CellPieceParam.PAWN -> pawnMove(firstClickCell.cellTeamParam)
             CellPieceParam.BISHOP -> bishopMove(firstClickCell.cellTeamParam)
             CellPieceParam.KNIGHT -> knightMove(firstClickCell.cellTeamParam)
-            CellPieceParam.ROOK -> TODO()
-            CellPieceParam.QUEEN -> TODO()
-            CellPieceParam.KING -> TODO()
+            CellPieceParam.ROOK -> rookMove(firstClickCell.cellTeamParam)
+            CellPieceParam.QUEEN -> queenMove(firstClickCell.cellTeamParam)
+            CellPieceParam.KING -> kingMove(firstClickCell.cellTeamParam)
         }
-
         return variable
     }
 
@@ -91,7 +90,7 @@ class LegalMoveChecker(
 
     private fun bishopMove(teamParam: CellTeamParam): Boolean {
         var variable = false
-        var helper = true
+        var isPieceThere = 0
         var i: Int = firstClickRow
         var j: Int = firstClickColumn
         val diffRow: Int = abs(secondClickRow - firstClickRow)
@@ -100,24 +99,23 @@ class LegalMoveChecker(
             if (secondClickColumn > firstClickColumn) {
                 if (secondClickRow > firstClickRow) {
                     while (i <= secondClickRow && j <= secondClickColumn) {
-                        if (chessField.getCell(i, j).cellTeamParam != teamParam){
+                        if (i != firstClickRow && j != firstClickColumn) {
+                            if (chessField.getCell(i, j).cellPieceParam != CellPieceParam.NOTHING) {
+                                isPieceThere++
+                            }
                             variable = true
-                        }else if (chessField.getCell(i, j).cellPieceParam != CellPieceParam.NOTHING){
-                            helper = false
                         }
-
-
                         i++
                         j++
                     }
                 } else if (secondClickRow < firstClickRow) {
                     while (i >= secondClickRow && j <= secondClickColumn) {
-                        if (chessField.getCell(i, j).cellTeamParam != teamParam){
+                        if (i != firstClickRow && j != firstClickColumn) {
+                            if (chessField.getCell(i, j).cellPieceParam != CellPieceParam.NOTHING) {
+                                isPieceThere++
+                            }
                             variable = true
-                        } else if (chessField.getCell(i, j).cellPieceParam != CellPieceParam.NOTHING){
-                            helper = false
                         }
-
                         i--
                         j++
                     }
@@ -125,32 +123,39 @@ class LegalMoveChecker(
             } else if (secondClickColumn < firstClickColumn) {
                 if (secondClickRow > firstClickRow) {
                     while (i <= secondClickRow || j >= secondClickColumn) {
-                        if (chessField.getCell(i, j).cellTeamParam != teamParam){
+                        if (i != firstClickRow && j != firstClickColumn) {
+                            if (chessField.getCell(i, j).cellPieceParam != CellPieceParam.NOTHING) {
+                                isPieceThere++
+                            }
                             variable = true
-                        }else if (chessField.getCell(i, j).cellPieceParam != CellPieceParam.NOTHING){
-                            helper = false
                         }
-
                         i++
                         j--
                     }
                 } else if (secondClickRow < firstClickRow) {
                     while (i >= secondClickRow || j >= secondClickColumn) {
-                        if (chessField.getCell(i, j).cellTeamParam != teamParam){
+                        if (i != firstClickRow && j != firstClickColumn) {
+                            if (chessField.getCell(i, j).cellPieceParam != CellPieceParam.NOTHING) {
+                                isPieceThere++
+                            }
                             variable = true
-                        }else if (chessField.getCell(i, j).cellPieceParam != CellPieceParam.NOTHING){
-                            helper = false
                         }
-
                         i--
                         j--
                     }
                 }
             }
         }
-        return if (helper){
+        return if (isPieceThere == 1 && chessField.getCellTeamParam(
+                secondClickRow,
+                secondClickColumn
+            ) != teamParam && chessField.getCellTeamParam(
+                secondClickRow,
+                secondClickColumn
+            ) != CellTeamParam.NONE || isPieceThere == 0
+        ) {
             variable
-        }else{
+        } else {
             false
         }
     }
@@ -195,6 +200,89 @@ class LegalMoveChecker(
                 ) {
                     variable = true
                 }
+            }
+        }
+        return variable
+    }
+
+    private fun rookMove(teamParam: CellTeamParam): Boolean {
+        var variable = false
+        var isPieceThere = 0
+        var i: Int = firstClickRow
+        var j: Int = firstClickColumn
+        if (firstClickRow == secondClickRow) {
+            if (secondClickColumn > firstClickColumn) {
+                while (j <= secondClickColumn) {
+                    if (j != firstClickColumn) {
+                        if (chessField.getCell(i, j).cellPieceParam != CellPieceParam.NOTHING) {
+                            isPieceThere++
+                        }
+                        variable = true
+                    }
+                    j++
+                }
+            } else if (secondClickColumn < firstClickColumn) {
+                while (j >= secondClickColumn) {
+                    if (j != firstClickColumn) {
+                        if (chessField.getCell(i, j).cellPieceParam != CellPieceParam.NOTHING) {
+                            isPieceThere++
+                        }
+                        variable = true
+                    }
+                    j--
+                }
+            }
+        }
+        if (firstClickColumn == secondClickColumn) {
+            if (secondClickRow > firstClickRow) {
+                while (i <= secondClickRow) {
+                    if (i != firstClickRow) {
+                        if (chessField.getCell(i, j).cellPieceParam != CellPieceParam.NOTHING) {
+                            isPieceThere++
+                        }
+                        variable = true
+                    }
+                    i++
+                }
+            } else if (secondClickRow < firstClickRow) {
+                while (i >= secondClickRow) {
+                    if (i != firstClickRow) {
+                        if (chessField.getCell(i, j).cellPieceParam != CellPieceParam.NOTHING) {
+                            isPieceThere++
+                        }
+                        variable = true
+                    }
+                    i--
+                }
+            }
+        }
+        return if (isPieceThere == 1 && chessField.getCellTeamParam(
+                secondClickRow,
+                secondClickColumn
+            ) != teamParam && chessField.getCellTeamParam(
+                secondClickRow,
+                secondClickColumn
+            ) != CellTeamParam.NONE || isPieceThere == 0
+        ) {
+            variable
+        } else {
+            false
+        }
+    }
+
+    private fun queenMove(teamParam: CellTeamParam): Boolean {
+        var variable = false
+        if (bishopMove(teamParam) || rookMove(teamParam)) {
+            variable = true
+        }
+        return variable
+    }
+
+    private fun kingMove(teamParam: CellTeamParam): Boolean {
+        var variable = false
+        if (secondClickRow == firstClickRow + 1 || secondClickRow == firstClickRow - 1 || secondClickRow == firstClickRow) {
+            if ((secondClickColumn == firstClickColumn || secondClickColumn + 1 == firstClickColumn || secondClickColumn - 1 == firstClickColumn) && teamParam != secondClickCell.cellTeamParam) {
+                variable = true
             }
         }
         return variable

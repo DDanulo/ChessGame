@@ -17,7 +17,7 @@ import kotlin.properties.Delegates
 class GameFragment : Fragment() {
 
     private lateinit var binding: FragmentGameBinding
-    private val turn = CellTeamParam.WHITE
+    private var turn = CellTeamParam.WHITE
     private var firstClickCell: Cell? = null
     private var firstClickRow by Delegates.notNull<Int>()
     private var firstClickColumn by Delegates.notNull<Int>()
@@ -35,17 +35,18 @@ class GameFragment : Fragment() {
         binding.ChessBoard.chessField = ChessField()
 
         binding.ChessBoard.actionListener = { row, column, field ->
-
             if (firstClickCell == null) {
-                if (field.getCellPieceParam(row, column) != CellPieceParam.NOTHING) {
-                    field.setCellSelectedParam(
-                        row,
-                        column,
-                        CellSelectedParam.SELECTED
-                    )
-                    firstClickRow = row
-                    firstClickColumn = column
-                    firstClickCell = field.getCell(row, column)
+                if (field.getCellTeamParam(row, column) == turn){
+                    if (field.getCellPieceParam(row, column) != CellPieceParam.NOTHING) {
+                        field.setCellSelectedParam(
+                            row,
+                            column,
+                            CellSelectedParam.SELECTED
+                        )
+                        firstClickRow = row
+                        firstClickColumn = column
+                        firstClickCell = field.getCell(row, column)
+                    }
                 }
             } else {
                 legalMoveCheck = LegalMoveChecker(
@@ -73,6 +74,11 @@ class GameFragment : Fragment() {
                     firstClickCell = null
                     firstClickColumn = -1
                     firstClickRow = -1
+                    if (turn == CellTeamParam.WHITE){
+                        turn = CellTeamParam.BLACK
+                    }else if (turn == CellTeamParam.BLACK){
+                        turn = CellTeamParam.WHITE
+                    }
                 }
             }
         }

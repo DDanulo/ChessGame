@@ -12,9 +12,9 @@ class ChessField {
 
     val listeners = mutableSetOf<OnFieldChangedListener>()
 
-    fun getCellSelectedParam(row: Int, column: Int): CellSelectedParam {
-        return cells[row][column].cellSelectedParam
-    }
+//    fun getCellSelectedParam(row: Int, column: Int): CellSelectedParam {
+//        return cells[row][column].cellSelectedParam
+//    }
 
     fun setCellSelectedParam(row: Int, column: Int, cellSelectedParam: CellSelectedParam) {
         cells[row][column].cellSelectedParam = cellSelectedParam
@@ -26,19 +26,19 @@ class ChessField {
         return cells[row][column].cellPieceParam
     }
 
-    fun setCellPieceParam(row: Int, column: Int, cellPieceParam: CellPieceParam) {
-        cells[row][column].cellPieceParam = cellPieceParam
-        listeners.forEach { it.invoke(this) }
-    }
+//    fun setCellPieceParam(row: Int, column: Int, cellPieceParam: CellPieceParam) {
+//        cells[row][column].cellPieceParam = cellPieceParam
+//        listeners.forEach { it.invoke(this) }
+//    }
 
     fun getCellTeamParam(row: Int, column: Int): CellTeamParam {
         return cells[row][column].cellTeamParam
     }
 
-    fun setCellTeamParam(row: Int, column: Int, cellTeamParam: CellTeamParam) {
-        cells[row][column].cellTeamParam = cellTeamParam
-        listeners.forEach { it.invoke(this) }
-    }
+//    fun setCellTeamParam(row: Int, column: Int, cellTeamParam: CellTeamParam) {
+//        cells[row][column].cellTeamParam = cellTeamParam
+//        listeners.forEach { it.invoke(this) }
+//    }
 
     fun getCell(row: Int, column: Int): Cell {
         return cells[row][column]
