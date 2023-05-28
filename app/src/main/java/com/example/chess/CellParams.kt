@@ -12,7 +12,8 @@ enum class CellPieceParam {
     KNIGHT,
     ROOK,
     QUEEN,
-    KING
+    KING,
+    DUCK
 }
 
 enum class CellTeamParam {

@@ -12,10 +12,20 @@ class ChessField {
 
     val listeners = mutableSetOf<OnFieldChangedListener>()
 
+    private var winner: CellTeamParam = CellTeamParam.NONE
+
 //    fun getCellSelectedParam(row: Int, column: Int): CellSelectedParam {
 //        return cells[row][column].cellSelectedParam
 //    }
 
+    fun setWinner(cellTeamParam: CellTeamParam){
+        winner = cellTeamParam
+        listeners.forEach{it.invoke(this)}
+    }
+
+    fun getWinner():CellTeamParam{
+        return winner
+    }
     fun setCellSelectedParam(row: Int, column: Int, cellSelectedParam: CellSelectedParam) {
         cells[row][column].cellSelectedParam = cellSelectedParam
         listeners.forEach { it.invoke(this) }

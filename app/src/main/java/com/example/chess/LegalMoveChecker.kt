@@ -23,6 +23,7 @@ class LegalMoveChecker(
             CellPieceParam.ROOK -> rookMove(firstClickCell.cellTeamParam)
             CellPieceParam.QUEEN -> queenMove(firstClickCell.cellTeamParam)
             CellPieceParam.KING -> kingMove(firstClickCell.cellTeamParam)
+            CellPieceParam.DUCK -> duckMove()
         }
         return variable
     }
@@ -42,7 +43,9 @@ class LegalMoveChecker(
                             firstClickColumn - 1
                         ).cellTeamParam == CellTeamParam.WHITE && secondClickRow == firstClickRow + 1 && secondClickColumn == firstClickColumn - 1
                     ) {
-                        variable = true
+                        if (secondClickCell.cellPieceParam != CellPieceParam.DUCK) {
+                            variable = true
+                        }
                     } else if (chessField.getCell(
                             firstClickRow + 1,
                             firstClickColumn
@@ -50,9 +53,9 @@ class LegalMoveChecker(
                     ) {
                         variable = false
                     } else if (firstClickColumn == secondClickColumn) {
-                        if (firstClickRow == 1 && (secondClickRow == 2 || secondClickRow == 3)) {
+                        if (firstClickRow == 1 && (secondClickRow == 2 || secondClickRow == 3) && secondClickCell.cellPieceParam != CellPieceParam.DUCK) {
                             variable = true
-                        } else if (secondClickRow == firstClickRow + 1) {
+                        } else if (secondClickRow == firstClickRow + 1 && secondClickCell.cellPieceParam != CellPieceParam.DUCK) {
                             variable = true
                         }
                     }
@@ -69,7 +72,10 @@ class LegalMoveChecker(
                         firstClickColumn - 1
                     ).cellTeamParam == CellTeamParam.BLACK && secondClickRow == firstClickRow - 1 && secondClickColumn == firstClickColumn - 1
                 ) {
-                    variable = true
+                    if (secondClickCell.cellPieceParam != CellPieceParam.DUCK) {
+                        variable = true
+                    }
+
                 } else if (chessField.getCell(
                         firstClickRow - 1,
                         firstClickColumn
@@ -77,9 +83,9 @@ class LegalMoveChecker(
                 ) {
                     variable = false
                 } else if (firstClickColumn == secondClickColumn) {
-                    if (firstClickRow == 6 && (secondClickRow == 5 || secondClickRow == 4)) {
+                    if (firstClickRow == 6 && (secondClickRow == 5 || secondClickRow == 4) && secondClickCell.cellPieceParam != CellPieceParam.DUCK) {
                         variable = true
-                    } else if (secondClickRow == firstClickRow - 1) {
+                    } else if (secondClickRow == firstClickRow - 1 && secondClickCell.cellPieceParam != CellPieceParam.DUCK) {
                         variable = true
                     }
                 }
@@ -162,45 +168,29 @@ class LegalMoveChecker(
 
     private fun knightMove(teamParam: CellTeamParam): Boolean {
         var variable = false
-        if (firstClickRow + 2 < 8) {
-            if (firstClickColumn + 1 < 8 && firstClickColumn - 1 > -1) {
-                if (secondClickRow == firstClickRow + 2
-                    && (secondClickColumn == firstClickColumn + 1 || secondClickColumn == firstClickColumn - 1)
-                    && teamParam != secondClickCell.cellTeamParam
-                ) {
-                    variable = true
-                }
-            }
+        if (secondClickRow == firstClickRow + 2
+            && (secondClickColumn == firstClickColumn + 1 || secondClickColumn == firstClickColumn - 1)
+            && teamParam != secondClickCell.cellTeamParam && secondClickCell.cellPieceParam != CellPieceParam.DUCK
+        ) {
+            variable = true
         }
-        if (firstClickRow - 2 < 8) {
-            if (firstClickColumn + 1 < 8 && firstClickColumn - 1 > -1) {
-                if (secondClickRow == firstClickRow - 2
-                    && (secondClickColumn == firstClickColumn + 1 || secondClickColumn == firstClickColumn - 1)
-                    && teamParam != secondClickCell.cellTeamParam
-                ) {
-                    variable = true
-                }
-            }
+        if (secondClickRow == firstClickRow - 2
+            && (secondClickColumn == firstClickColumn + 1 || secondClickColumn == firstClickColumn - 1)
+            && teamParam != secondClickCell.cellTeamParam && secondClickCell.cellPieceParam != CellPieceParam.DUCK
+        ) {
+            variable = true
         }
-        if (firstClickColumn + 2 < 8) {
-            if (firstClickRow + 1 < 8 && firstClickRow - 1 > -1) {
-                if (secondClickColumn == firstClickColumn + 2
-                    && (secondClickRow == firstClickRow + 1 || secondClickRow == firstClickRow - 1)
-                    && teamParam != secondClickCell.cellTeamParam
-                ) {
-                    variable = true
-                }
-            }
+        if (secondClickColumn == firstClickColumn + 2
+            && (secondClickRow == firstClickRow + 1 || secondClickRow == firstClickRow - 1)
+            && teamParam != secondClickCell.cellTeamParam && secondClickCell.cellPieceParam != CellPieceParam.DUCK
+        ) {
+            variable = true
         }
-        if (firstClickColumn - 2 < 8) {
-            if (firstClickRow + 1 < 8 && firstClickRow - 1 > -1) {
-                if (secondClickColumn == firstClickColumn - 2
-                    && (secondClickRow == firstClickRow + 1 || secondClickRow == firstClickRow - 1)
-                    && teamParam != secondClickCell.cellTeamParam
-                ) {
-                    variable = true
-                }
-            }
+        if (secondClickColumn == firstClickColumn - 2
+            && (secondClickRow == firstClickRow + 1 || secondClickRow == firstClickRow - 1)
+            && teamParam != secondClickCell.cellTeamParam && secondClickCell.cellPieceParam != CellPieceParam.DUCK
+        ) {
+            variable = true
         }
         return variable
     }
@@ -281,9 +271,17 @@ class LegalMoveChecker(
     private fun kingMove(teamParam: CellTeamParam): Boolean {
         var variable = false
         if (secondClickRow == firstClickRow + 1 || secondClickRow == firstClickRow - 1 || secondClickRow == firstClickRow) {
-            if ((secondClickColumn == firstClickColumn || secondClickColumn + 1 == firstClickColumn || secondClickColumn - 1 == firstClickColumn) && teamParam != secondClickCell.cellTeamParam) {
+            if ((secondClickColumn == firstClickColumn || secondClickColumn + 1 == firstClickColumn || secondClickColumn - 1 == firstClickColumn) && teamParam != secondClickCell.cellTeamParam && secondClickCell.cellPieceParam != CellPieceParam.DUCK) {
                 variable = true
             }
+        }
+        return variable
+    }
+
+    private fun duckMove(): Boolean {
+        var variable = false
+        if (secondClickCell.cellPieceParam == CellPieceParam.NOTHING) {
+            variable = true
         }
         return variable
     }

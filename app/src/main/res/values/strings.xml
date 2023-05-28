@@ -1,10 +1,19 @@
 <resources>
-    <string name="app_name">Chess</string>
+    <string name="app_name">Duck Chess</string>
     <string name="play">Play</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="sample_time">00:00</string>
     <string name="sample_name">sampleName</string>
-    <string name="made_by_me">app made by me from the R. Shukhevych lyceum</string>
+    <string name="made_by_me">App made by me from the R. Shukhevych lyceum \n \n
+        What are the rules of Duck Chess? \n
+        Duck Chess follows most of the rules of regular chess. However, there are some slight differences, listed below: \n
+        1) Players make a standard chess move, followed by moving the duck to an empty square on the board.\n
+        2) The duck always moves. \n
+        3) The duck blocks the square where it is placed, making it impossible for other pieces to move to or through it. \n
+        4) Knights can jump over the duck.\n
+        5) There are no checks or checkmates—players capture the enemy king to win. \n
+        6) Kings can move to attacked squares. They can also castle through attacked squares. \n
+</string>
     <string name="info">Credits</string>
     <string name="ukrainian">Ukrainian</string>
     <string name="english">English</string>

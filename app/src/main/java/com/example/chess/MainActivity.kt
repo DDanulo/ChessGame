@@ -20,10 +20,6 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.materialToolbar)
 
-        supportFragmentManager.beginTransaction()
-            .add(R.id.main_container_for_fragments, MainFragment())
-            .commit()
-
     }
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.language_change_menu, menu)

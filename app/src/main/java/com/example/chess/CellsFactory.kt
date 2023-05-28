@@ -41,6 +41,7 @@ class CellsFactory {
         cells[6][5] = Cell(cellPieceParam = CellPieceParam.PAWN, cellTeamParam = CellTeamParam.WHITE)
         cells[6][6] = Cell(cellPieceParam = CellPieceParam.PAWN, cellTeamParam = CellTeamParam.WHITE)
         cells[6][7] = Cell(cellPieceParam = CellPieceParam.PAWN, cellTeamParam = CellTeamParam.WHITE)
+        cells[2][0] = Cell(cellPieceParam = CellPieceParam.DUCK, cellTeamParam = CellTeamParam.WHITE)
         return cells
     }
 }

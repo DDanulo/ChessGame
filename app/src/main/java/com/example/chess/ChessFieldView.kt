@@ -36,8 +36,10 @@ class ChessFieldView(
     private lateinit var whiteCellsSelectedPaint: Paint
     private lateinit var blackCellsPaint: Paint
     private lateinit var whiteCellsPaint: Paint
+    private lateinit var textPaint: Paint
     private val piecesBitmaps: PiecesBitmaps = PiecesBitmaps()
     private val bitmap: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.pieces)
+    private val duckBitmap: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.duck)
 
 
     private var blackCellColor by Delegates.notNull<Int>()
@@ -81,6 +83,8 @@ class ChessFieldView(
         blackCellsPaint = Paint(Paint.ANTI_ALIAS_FLAG)
         blackCellsPaint.color = BLACK_CELL_COLOR
         blackCellsPaint.style = Paint.Style.FILL
+//        blackCellsPaint.textSize = 100f
+//        blackCellsPaint.textAlign = Paint.Align.CENTER
 
         whiteCellsPaint = Paint(Paint.ANTI_ALIAS_FLAG)
         whiteCellsPaint.color = WHITE_CELL_COLOR
@@ -93,6 +97,11 @@ class ChessFieldView(
         whiteCellsSelectedPaint = Paint(Paint.ANTI_ALIAS_FLAG)
         whiteCellsSelectedPaint.color = WHITE_CELL_SELECTED_COLOR
         whiteCellsSelectedPaint.style = Paint.Style.FILL
+
+        textPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+        textPaint.color = Color.BLACK
+        textPaint.textSize = 100f
+        textPaint.textAlign = Paint.Align.CENTER
 
     }
 
@@ -186,7 +195,7 @@ class ChessFieldView(
         drawField(canvas)
         drawSelection(canvas)
         drawPieces(canvas)
-
+        drawWinningText(canvas)
     }
 
     private fun drawSelection(canvas: Canvas) {
@@ -194,9 +203,9 @@ class ChessFieldView(
             for (column in 0..7) {
                 val cell = chessField.getCell(row, column)
                 if (cell.cellSelectedParam == CellSelectedParam.SELECTED) {
-                    if (row % 2 != column % 2){
+                    if (row % 2 != column % 2) {
                         canvas.drawRect(boardSquares.squares[row][column], blackCellsSelectedPaint)
-                    }else{
+                    } else {
                         canvas.drawRect(boardSquares.squares[row][column], whiteCellsSelectedPaint)
                     }
                 }
@@ -262,6 +271,13 @@ class ChessFieldView(
                             piecesBitmaps.blackKing,
                             boardSquares.squares[row][column], blackCellsPaint
                         )
+
+                        CellPieceParam.DUCK -> canvas.drawBitmap(
+                            duckBitmap,
+                            piecesBitmaps.duck,
+                            boardSquares.squares[row][column],
+                            blackCellsPaint
+                        )
                     }
                 } else if (cell.cellTeamParam == CellTeamParam.WHITE) {
                     when (cell.cellPieceParam) {
@@ -304,10 +320,26 @@ class ChessFieldView(
                             piecesBitmaps.whiteKing,
                             boardSquares.squares[row][column], blackCellsPaint
                         )
+                        CellPieceParam.DUCK -> canvas.drawBitmap(
+                            duckBitmap,
+                            piecesBitmaps.duck,
+                            boardSquares.squares[row][column],
+                            blackCellsPaint
+                        )
                     }
                 }
 
             }
+        }
+    }
+
+    private fun drawWinningText(canvas: Canvas){
+        when(chessField.getWinner()){
+            CellTeamParam.NONE -> return
+            CellTeamParam.BLACK -> canvas.drawText("black won",
+                (right/2).toFloat(), boardSquares.squares[7][7].bottom + cellSize, textPaint)
+            CellTeamParam.WHITE -> canvas.drawText("white won",
+                (right/2).toFloat(), boardSquares.squares[7][7].bottom + cellSize, textPaint)
         }
     }
 
@@ -344,5 +376,6 @@ class ChessFieldView(
         @JvmField
         val WHITE_CELL_SELECTED_COLOR = Color.parseColor("#75c7e9")
         const val DESIRED_CELL_SIZE = 50
+
     }
 }
